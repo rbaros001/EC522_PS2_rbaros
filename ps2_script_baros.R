@@ -56,6 +56,7 @@ unemp_recent <- unemp |>
 range(unemp_recent$date)   # should start at 2015-01-01
 count(unemp_recent, region) # each region should have the same number of rows
 
+# Summary Statistics for each region
 unemp_summary <- unemp |>
   group_by(region) |>
   summarise(
