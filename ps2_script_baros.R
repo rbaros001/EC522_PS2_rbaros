@@ -108,7 +108,16 @@ ggplot(unemp, aes(x = date, y = unemployment_rate)) +
   ) +
   theme_minimal()
 
-
+# Produce a bar chart
+ggplot(unemp_summary, aes(x = fct_reorder(region, meanrate), y = meanrate, fill = region)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Average Unemployment Rate by Region",
+    x = "Region",
+    y = "Average Unemployment Rate (%)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
 
 
 
