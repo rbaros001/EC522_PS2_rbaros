@@ -42,7 +42,7 @@ unemp <- unemp |>
   ) |>
   ungroup()
 
-# Calculate the change in unemployment rate
+# Calculate month-over-month change in unemployment rate
 unemp <- unemp |>
   arrange(region, date) |>
   group_by(region) |>
