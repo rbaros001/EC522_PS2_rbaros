@@ -1,6 +1,7 @@
 library(tidyverse)
 library(tidyquant)
 
+## Part 3
 # unemp_raw <- tq_get(
 #   c("UNRATE", "ORUR", "CAUR", "TXUR", "NYUR"),
 #   get = "economic.data",
@@ -15,6 +16,7 @@ library(tidyquant)
 
 unemp_raw = read_rds("data/unemp_raw.rds")
 
+## Part 4
 # Process the unemployment data
 unemp <- unemp_raw |>
   rename(unemployment_rate = price) |>
@@ -81,11 +83,19 @@ unemp_top_decreases_no_covid <- unemp |>
   filter(date < as.Date("2020-01-01") | date > as.Date("2020-12-31")) |>
   slice_min(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
    
-    
-    
-    
-    
-    
+## Part 5 
+# Create a Line Plot 
+library(ggplot2)
+
+ggplot(unemp, aes(x = date, y = unemployment_rate, color = region)) +
+  geom_line() +
+  labs(
+    title = "Unemployment Rate Over Time by Region",
+    x = "Date",
+    y = "Unemployment Rate (%)",
+    color = "Region"
+  ) +
+  theme_minimal()
     
     
     
