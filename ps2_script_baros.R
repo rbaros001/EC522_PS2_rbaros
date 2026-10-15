@@ -65,14 +65,21 @@ unemp_summary <- unemp |>
     min_rate = min(unemployment_rate, na.rm = TRUE)
   )
 
+# Find the minimum and maximum extremes
 unemp_top_increase <- unemp |>
   slice_max(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
 
 unemp_top_decreases <- unemp |>
   slice_min(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
 
+# Find the minimum and maximum extremes excluding 2020
+unemp_top_increase_no_covid <- unemp |>
+  filter(date < as.Date("2020-01-01") | date > as.Date("2020-12-31")) |>
+  slice_max(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
 
-
+unemp_top_decreases_no_covid <- unemp |>
+  filter(date < as.Date("2020-01-01") | date > as.Date("2020-12-31")) |>
+  slice_min(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
    
     
     
