@@ -96,7 +96,36 @@ ggplot(unemp, aes(x = date, y = unemployment_rate, color = region)) +
     color = "Region"
   ) +
   theme_minimal()
-    
-    
+
+# Create Individual line plots
+ggplot(unemp, aes(x = date, y = unemployment_rate)) +
+  geom_line() +
+  facet_wrap(~ region, scales = "free_y") +
+  labs(
+    title = "Unemployment Rate Over Time by Region",
+    x = "Date",
+    y = "Unemployment Rate (%)"
+  ) +
+  theme_minimal()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
     
