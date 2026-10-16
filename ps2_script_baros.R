@@ -30,7 +30,6 @@ unemp <- unemp_raw |>
     )
   )
 
-
 # Replace the unemployment rate for October 2025 with the September 2025 value
 unemp <- unemp |>
   arrange(region, date) |>
@@ -58,13 +57,22 @@ unemp_recent <- unemp |>
 range(unemp_recent$date)   # should start at 2015-01-01
 count(unemp_recent, region) # each region should have the same number of rows
 
-# Summary Statistics for each region
+# Summary Statistics for each region (wu)
 unemp_summary <- unemp |>
   group_by(region) |>
   summarise(
     meanrate = mean(unemployment_rate, na.rm = TRUE),
     max_rate = max(unemployment_rate, na.rm = TRUE),
     min_rate = min(unemployment_rate, na.rm = TRUE)
+  )
+
+# (wu)
+unemp_recent_summary <- unemp_recent |>
+  group_by(region) |>
+  summarise(
+    meanrateR = mean(unemployment_rate, na.rm = TRUE),
+    max_rateR = max(unemployment_rate, na.rm = TRUE),
+    min_rateR = min(unemployment_rate, na.rm = TRUE)
   )
 
 # Find the minimum and maximum extremes
@@ -74,7 +82,7 @@ unemp_top_increase <- unemp |>
 unemp_top_decreases <- unemp |>
   slice_min(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
 
-# Find the minimum and maximum extremes excluding 2020
+# Find the minimum and maximum extremes excluding 2020 (wu)
 unemp_top_increase_no_covid <- unemp |>
   filter(date < as.Date("2020-01-01") | date > as.Date("2020-12-31")) |>
   slice_max(unemployment_rate_change, n = 5, with_ties = TRUE, na_rm = TRUE)
@@ -119,16 +127,27 @@ ggplot(unemp_summary, aes(x = fct_reorder(region, meanrate), y = meanrate, fill 
   theme_minimal() +
   theme(legend.position = "none")
 
+# Create your own
+top_by_region <- unemp |>
+  filter(date < as.Date("2020-01-01") | date > as.Date("2020-12-31")) |>
+  group_by(region) |>
+  slice_min(unemployment_rate_change, n = 1, with_ties = FALSE, na_rm = TRUE) |>
+  ungroup() |>
+  mutate(label = paste0(format(date, "%b %Y"), "\nRate: ", unemployment_rate, "%"))
 
-
-
-
-
-
-
-
-
-
+ggplot(top_by_region,
+       aes(x = reorder(region, unemployment_rate_change),
+           y = unemployment_rate_change, fill = region)) +
+  geom_col(show.legend = FALSE) +
+  geom_text(aes(label = label), vjust = 1.1, size = 3.5) +
+  scale_y_continuous(expand = expansion(mult = c(0.2, 0.05))) +
+  labs(
+    title = "Largest Month-Over-Month Decrease in Unemployment by Region",
+    subtitle = "Excluding 2020",
+    x = "Region",
+    y = "Change in unemployment rate (percentage points)"
+  ) +
+  theme_minimal()
 
 
 
